@@ -1,0 +1,8 @@
+{
+    "compilerOptions": {
+      "baseUrl": "./", // Replace "./src" with the actual path to your source code directory
+      "paths": {
+        "@/*": ["src/*"] // Map "@" to the "components" directory
+      }
+    }
+  }
