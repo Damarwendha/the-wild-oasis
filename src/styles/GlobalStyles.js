@@ -54,6 +54,10 @@ const GlobalStyles = createGlobalStyle`
   /* For dark mode */
   --image-grayscale: 0;
   --image-opacity: 100%;
+
+  // Layout
+  --header-height: 7rem;
+  --aside-width: 22rem;
 }
 
 *,
@@ -79,6 +83,8 @@ body {
   min-height: 100vh;
   line-height: 1.5;
   font-size: 1.6rem;
+  padding-left: var(--aside-width);
+  padding-top: var(--header-height);
 }
 
 input,
@@ -185,4 +191,4 @@ FOR DARK MODE
 
 `;
 
-export default GlobalStyles
+export default GlobalStyles;

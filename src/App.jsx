@@ -11,43 +11,51 @@ import Login from "@/pages/Login";
 import Settings from "@/pages/Settings";
 import NewUsers from "@/pages/Users";
 import PageNotFound from "@/pages/PageNotFound";
+import AppLayout from "@/ui/AppLayout";
 
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <Navigate replace to="dashboard" />,
-  },
-  {
-    path: "dashboard",
-    element: <Dashboard />,
-  },
-  {
-    path: "account",
-    element: <Account />,
-  },
-  {
-    path: "bookings",
-    element: <Bookings />,
-  },
-  {
-    path: "cabins",
-    element: <Cabins />,
+    path: "*",
+    element: <PageNotFound />,
   },
   {
     path: "login",
     element: <Login />,
   },
   {
-    path: "settings",
-    element: <Settings />,
-  },
-  {
-    path: "users",
-    element: <NewUsers />,
-  },
-  {
-    path: "*",
-    element: <PageNotFound />,
+    element: <AppLayout />,
+    children: [
+      {
+        index: true,
+        path: "/",
+        element: <Navigate replace to="dashboard" />,
+      },
+      {
+        path: "dashboard",
+        element: <Dashboard />,
+      },
+      {
+        path: "account",
+        element: <Account />,
+      },
+      {
+        path: "bookings",
+        element: <Bookings />,
+      },
+      {
+        path: "cabins",
+        element: <Cabins />,
+      },
+
+      {
+        path: "settings",
+        element: <Settings />,
+      },
+      {
+        path: "users",
+        element: <NewUsers />,
+      },
+    ],
   },
 ]);
 
