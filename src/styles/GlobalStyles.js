@@ -56,7 +56,7 @@ const GlobalStyles = createGlobalStyle`
   --image-opacity: 100%;
 
   // Layout
-  --header-height: 7rem;
+  --header-height: 5rem;
   --aside-width: 22rem;
 }
 
