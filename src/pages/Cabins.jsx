@@ -10,7 +10,7 @@ function Cabins() {
         <p>TEST</p>
       </Row>
 
-      <Row as='table' type='vertical'>
+      <Row type="vertical">
         <CabinTable />
       </Row>
     </>
