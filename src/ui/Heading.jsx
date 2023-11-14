@@ -1,6 +1,7 @@
 import styled, { css } from "styled-components";
 
 const Heading = styled.h1`
+  margin-top: 2rem;
   ${(props) => as[props.as]}
 `;
 
