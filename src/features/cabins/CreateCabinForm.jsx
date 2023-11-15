@@ -9,9 +9,9 @@ import Button from "@/ui/Button";
 import FileInput from "@/ui/FileInput";
 import Textarea from "@/ui/Textarea";
 import Spinner from "@/ui/Spinner";
+import FormRow from "@/ui/FormRow";
 
 import { addCabin } from "@/services/apiCabins";
-import FormRow from "@/ui/FormRow";
 
 const StyledFormRow = styled.div`
   display: grid;
