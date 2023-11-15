@@ -11,6 +11,7 @@ const Main = styled.main`
   background-color: var(--color-grey-100);
   flex: 1;
   height: 100vh;
+  overflow: scroll;
 `;
 
 const Container = styled.div`
