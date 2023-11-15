@@ -63,12 +63,13 @@ function CreateCabinForm() {
   const { mutate, isPending: isCreating } = useMutation({
     mutationFn: (data) => addCabin(data),
     mutationKey: "cabins",
+
     onSuccess: () => {
       toast.success("Cabin successfully added");
       queryClient.invalidateQueries("cabins");
-
       reset();
     },
+
     onError: () => {
       toast.error((error) => error.message);
     },
@@ -88,24 +89,33 @@ function CreateCabinForm() {
       </FormRow>
 
       <FormRow label="Maximum capacity">
-        <Input type="number" id="maxCapacity" {...register("maxCapacity")} />
+        <Input
+          type="number"
+          id="maxCapacity"
+          {...register("maxCapacity", { required: true })}
+        />
 
         {errors.maxCapacity && <Error>*This field is requiered</Error>}
       </FormRow>
 
       <FormRow label="Regular price">
-        <Input type="number" id="regularPrice" {...register("regularPrice")} />
+        <Input
+          type="number"
+          id="regularPrice"
+          {...register("regularPrice", { required: true })}
+        />
 
         {errors.regularPrice && <Error>*This field is requiered</Error>}
       </FormRow>
 
       <FormRow label="Discount">
         <Input
-          type="text"
+          type="number"
           id="discount"
           defaultValue={0}
           {...register("discount", {
-            validate: (value) => value < getValues().regularPrice,
+            validate: (value) =>
+              Number(value) < Number(getValues().regularPrice),
           })}
         />
         {errors.discount && (
@@ -118,15 +128,15 @@ function CreateCabinForm() {
           type="number"
           id="description"
           defaultValue=""
-          {...register("description")}
+          {...register("description", { required: true })}
         />
         {errors.description && <Error>*This field is requiered</Error>}
       </FormRow>
 
-      <FormRow label="Cabin photo">
+      <StyledFormRow label="Cabin photo">
+        <StyledLabel htmlFor="image">Cabin photo</StyledLabel>
         <FileInput id="image" accept="image/*" />
-        {errors.image && <Error>*This field is requiered</Error>}
-      </FormRow>
+      </StyledFormRow>
 
       <StyledFormRow>
         {/* type is an HTML attribute! */}
