@@ -55,6 +55,7 @@ function CreateCabinForm() {
     reset,
     register,
     formState: { errors },
+    getValues,
   } = useForm();
 
   const queryClient = useQueryClient();
@@ -103,7 +104,9 @@ function CreateCabinForm() {
           type="text"
           id="discount"
           defaultValue={0}
-          {...register("discount")}
+          {...register("discount", {
+            validate: (value) => value < getValues().regularPrice,
+          })}
         />
         {errors.discount && (
           <Error>*Discount value should be less than regular price</Error>
