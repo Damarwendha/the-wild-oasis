@@ -11,8 +11,9 @@ import Textarea from "@/ui/Textarea";
 import Spinner from "@/ui/Spinner";
 
 import { addCabin } from "@/services/apiCabins";
+import FormRow from "@/ui/FormRow";
 
-const FormRow = styled.div`
+const StyledFormRow = styled.div`
   display: grid;
   align-items: center;
   grid-template-columns: 24rem 1fr 1.2fr;
@@ -39,7 +40,7 @@ const FormRow = styled.div`
   }
 `;
 
-const Label = styled.label`
+const StyledLabel = styled.label`
   font-weight: 500;
 `;
 
@@ -50,10 +51,10 @@ const Error = styled.span`
 
 function CreateCabinForm() {
   const {
-    register,
     handleSubmit,
-    formState: { errors },
     reset,
+    register,
+    formState: { errors },
   } = useForm();
 
   const queryClient = useQueryClient();
@@ -64,6 +65,7 @@ function CreateCabinForm() {
     onSuccess: () => {
       toast.success("Cabin successfully added");
       queryClient.invalidateQueries("cabins");
+
       reset();
     },
     onError: () => {
@@ -75,58 +77,61 @@ function CreateCabinForm() {
 
   return (
     <Form onSubmit={handleSubmit(mutate)}>
-      <FormRow>
-        <Label htmlFor="name">Cabin name</Label>
+      <FormRow label="Cabin name">
         <Input
           type="text"
           id="name"
           {...register("name", { required: true })}
         />
-        {errors.name && <Error>*This field is required</Error>}
+        {errors.name && <Error>*This field is requiered</Error>}
       </FormRow>
 
-      <FormRow>
-        <Label htmlFor="maxCapacity">Maximum capacity</Label>
+      <FormRow label="Maximum capacity">
         <Input type="number" id="maxCapacity" {...register("maxCapacity")} />
+
+        {errors.maxCapacity && <Error>*This field is requiered</Error>}
       </FormRow>
 
-      <FormRow>
-        <Label htmlFor="regularPrice">Regular price</Label>
+      <FormRow label="Regular price">
         <Input type="number" id="regularPrice" {...register("regularPrice")} />
+
+        {errors.regularPrice && <Error>*This field is requiered</Error>}
       </FormRow>
 
-      <FormRow>
-        <Label htmlFor="discount">Discount</Label>
+      <FormRow label="Discount">
         <Input
           type="text"
           id="discount"
           defaultValue={0}
           {...register("discount")}
         />
+        {errors.discount && (
+          <Error>*Discount value should be less than regular price</Error>
+        )}
       </FormRow>
 
-      <FormRow>
-        <Label htmlFor="description">Description for website</Label>
+      <FormRow label="Description for website">
         <Textarea
           type="number"
           id="description"
           defaultValue=""
           {...register("description")}
         />
+        {errors.description && <Error>*This field is requiered</Error>}
       </FormRow>
 
-      <FormRow>
-        <Label htmlFor="image">Cabin photo</Label>
+      <FormRow label="Cabin photo">
         <FileInput id="image" accept="image/*" />
+        {errors.image && <Error>*This field is requiered</Error>}
       </FormRow>
 
-      <FormRow>
+      <StyledFormRow>
         {/* type is an HTML attribute! */}
         <Button variation="secondary" type="reset" disabled={isCreating}>
           Cancel
         </Button>
         <Button disabled={isCreating}>Edit cabin</Button>
-      </FormRow>
+      </StyledFormRow>
     </Form>
   );
 }
