@@ -34,3 +34,7 @@ export function randomId() {
   const id = String(random).replaceAll(".", "");
   return id;
 }
+
+export function isEmptyObj(object) {
+  return JSON.stringify(object) === "{}";
+}

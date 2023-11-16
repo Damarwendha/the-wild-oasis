@@ -12,41 +12,68 @@ async function getCabins() {
   return data;
 }
 
-async function addCabin(newCabin) {
-  const imageName = `${randomId()}-${newCabin.image.name}`.replaceAll("/", "");
+async function createEditCabin({ id, image, ...otherValues }) {
+  // action gonna be create / edit
+  const action = !id ? "create" : "edit";
+  const imageName = `${randomId()}-${image.name}`.replaceAll("/", "");
   const imagePath =
     SUPABASE_URL + "/storage/v1/object/public/cabin-images/" + imageName;
 
-  // create cabin to database
-  const { data, error } = await supabase
-    .from("cabins")
-    .insert([
-      {
-        ...newCabin,
-        image: imagePath,
-      },
-    ])
-    .select();
+  let newData;
+  // A) create cabin
+  if (action === "create") {
+    const { data, error } = await supabase
+      .from("cabins")
+      .insert([
+        {
+          ...otherValues,
+          image: imagePath,
+        },
+      ])
+      .select();
 
-  if (error) {
-    console.error(error);
-    throw new Error("Failed to create cabin");
+    if (error) {
+      console.error(error);
+      throw new Error("Failed to create cabin");
+    }
+
+    newData = data;
   }
 
-  // upload cabin to storage
-  const { error: storageError } = await supabase.storage
-    .from("cabin-images")
-    .upload(imageName, newCabin.image);
+  // B) edit cabin
+  if (action === "edit") {
+    const { data, error } = await supabase
+      .from("cabins")
+      .update({
+        ...otherValues,
+        image: typeof image !== "string" ? imagePath : image,
+      })
+      .eq("id", id)
+      .select()
 
-  if (storageError) {
-    // delete cabin if there's an error when uploading image to storage
-    await supabase.from("cabins").delete().eq("id", data.id);
+    if (error) {
+      console.error(error);
+      throw new Error("Failed to edit cabin");
+    }
 
-    console.error(storageError);
-    throw new Error("Failed when uploading cabin image to storage");
+    newData = data;
   }
 
-  return data;
+  // upload cabin image to storage
+  if (typeof image === "object") {
+    const { error: storageError } = await supabase.storage
+      .from("cabin-images")
+      .upload(imageName, image);
+
+    if (storageError) {
+      // delete cabin if there's an error when uploading image to storage
+      await supabase.from("cabins").delete().eq("id", newData.id);
+
+      console.error(storageError);
+      throw new Error("Failed when uploading cabin image to storage");
+    }
+  }
+  return newData;
 }
 
 async function deleteCabin(id) {
@@ -58,4 +85,4 @@ async function deleteCabin(id) {
   }
 }
 
-export { getCabins, deleteCabin, addCabin };
+export { getCabins, deleteCabin, createEditCabin };

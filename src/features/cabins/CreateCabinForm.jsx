@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import styled from "styled-components";
 import toast from "react-hot-toast";
@@ -11,7 +12,8 @@ import Textarea from "@/ui/Textarea";
 import Spinner from "@/ui/Spinner";
 import FormRow from "@/ui/FormRow";
 
-import { addCabin } from "@/services/apiCabins";
+import { createEditCabin } from "@/services/apiCabins";
+import { isEmptyObj } from "@/utils/helpers";
 
 const StyledFormRow = styled.div`
   display: grid;
@@ -49,19 +51,21 @@ const Error = styled.span`
   color: var(--color-red-700);
 `;
 
-function CreateCabinForm() {
+function CreateCabinForm({ cabinToEdit = {} }) {
+  const { id: cabinToEditId, image, ...otherValues } = cabinToEdit;
+  let action = !cabinToEditId ? "create" : "edit";
   const {
     handleSubmit,
     reset,
     register,
     formState: { errors },
     getValues,
-  } = useForm();
+  } = useForm({ defaultValues: { ...otherValues } });
 
   const queryClient = useQueryClient();
 
   const { mutate, isPending: isCreating } = useMutation({
-    mutationFn: (data) => addCabin(data),
+    mutationFn: (data) => createEditCabin(data),
     mutationKey: "cabins",
 
     onSuccess: () => {
@@ -78,7 +82,11 @@ function CreateCabinForm() {
   if (isCreating) return <Spinner />;
 
   function onSubmit(data) {
-    mutate({ ...data, image: data.image[0] });
+    mutate({
+      ...data,
+      image: isEmptyObj(data.image) ? image : data.image[0],
+      id: cabinToEditId,
+    });
   }
 
   return (
@@ -142,7 +150,7 @@ function CreateCabinForm() {
         <FileInput
           id="image"
           accept="image/*"
-          {...register("image", { required: true })}
+          {...register("image", { required: action === "create" })}
         />
         {errors.image && <Error>*This field is requiered</Error>}
       </StyledFormRow>
