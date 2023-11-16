@@ -77,8 +77,12 @@ function CreateCabinForm() {
 
   if (isCreating) return <Spinner />;
 
+  function onSubmit(data) {
+    mutate({ ...data, image: data.image[0] });
+  }
+
   return (
-    <Form onSubmit={handleSubmit(mutate)}>
+    <Form onSubmit={handleSubmit(onSubmit)}>
       <FormRow label="Cabin name">
         <Input
           type="text"
@@ -135,7 +139,12 @@ function CreateCabinForm() {
 
       <StyledFormRow label="Cabin photo">
         <StyledLabel htmlFor="image">Cabin photo</StyledLabel>
-        <FileInput id="image" accept="image/*" />
+        <FileInput
+          id="image"
+          accept="image/*"
+          {...register("image", { required: true })}
+        />
+        {errors.image && <Error>*This field is requiered</Error>}
       </StyledFormRow>
 
       <StyledFormRow>
