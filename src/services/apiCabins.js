@@ -12,16 +12,19 @@ async function getCabins() {
   return data;
 }
 
-async function createEditCabin({ id, image, ...otherValues }) {
-  // action gonna be create / edit
-  const action = !id ? "create" : "edit";
+async function createEditCabin({ id: cabinToEditId, image, ...otherValues }) {
+  const isCreateSession = !cabinToEditId;
+
+  const isNewImage = typeof image !== "string";
+
+  // only use this when isNewImage
   const imageName = `${randomId()}-${image.name}`.replaceAll("/", "");
   const imagePath =
     SUPABASE_URL + "/storage/v1/object/public/cabin-images/" + imageName;
 
   let newData;
   // A) create cabin
-  if (action === "create") {
+  if (isCreateSession) {
     const { data, error } = await supabase
       .from("cabins")
       .insert([
@@ -41,15 +44,15 @@ async function createEditCabin({ id, image, ...otherValues }) {
   }
 
   // B) edit cabin
-  if (action === "edit") {
+  if (!isCreateSession) {
     const { data, error } = await supabase
       .from("cabins")
       .update({
         ...otherValues,
-        image: typeof image !== "string" ? imagePath : image,
+        image: isNewImage ? imagePath : image,
       })
-      .eq("id", id)
-      .select()
+      .eq("id", cabinToEditId)
+      .select();
 
     if (error) {
       console.error(error);
@@ -59,8 +62,8 @@ async function createEditCabin({ id, image, ...otherValues }) {
     newData = data;
   }
 
-  // upload cabin image to storage
-  if (typeof image === "object") {
+  // upload new image to storage
+  if (isNewImage) {
     const { error: storageError } = await supabase.storage
       .from("cabin-images")
       .upload(imageName, image);
@@ -70,9 +73,10 @@ async function createEditCabin({ id, image, ...otherValues }) {
       await supabase.from("cabins").delete().eq("id", newData.id);
 
       console.error(storageError);
-      throw new Error("Failed when uploading cabin image to storage");
+      throw new Error("Failed when uploading image to storage");
     }
   }
+
   return newData;
 }
 

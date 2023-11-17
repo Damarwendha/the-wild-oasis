@@ -4,6 +4,9 @@ import styled from "styled-components";
 import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
 
+import { createEditCabin } from "@/services/apiCabins";
+import { isEmptyObj } from "@/utils/helpers";
+
 import Input from "@/ui/Input";
 import Form from "@/ui/Form";
 import Button from "@/ui/Button";
@@ -12,48 +15,18 @@ import Textarea from "@/ui/Textarea";
 import Spinner from "@/ui/Spinner";
 import FormRow from "@/ui/FormRow";
 
-import { createEditCabin } from "@/services/apiCabins";
-import { isEmptyObj } from "@/utils/helpers";
-
-const StyledFormRow = styled.div`
-  display: grid;
-  align-items: center;
-  grid-template-columns: 24rem 1fr 1.2fr;
-  gap: 2.4rem;
-
-  padding: 1.2rem 0;
-
-  &:first-child {
-    padding-top: 0;
-  }
-
-  &:last-child {
-    padding-bottom: 0;
-  }
-
-  &:not(:last-child) {
-    border-bottom: 1px solid var(--color-grey-100);
-  }
-
-  &:has(button) {
-    display: flex;
-    justify-content: flex-end;
-    gap: 1.2rem;
-  }
-`;
-
-const StyledLabel = styled.label`
-  font-weight: 500;
-`;
-
 const Error = styled.span`
   font-size: 1.4rem;
   color: var(--color-red-700);
 `;
 
 function CreateCabinForm({ cabinToEdit = {} }) {
-  const { id: cabinToEditId, image, ...otherValues } = cabinToEdit;
-  let action = !cabinToEditId ? "create" : "edit";
+  // create session or edit session
+  const isCreateSession = isEmptyObj(cabinToEdit);
+
+  // undefined when create session
+  const { id: cabinToEditId, image: oldImage, ...otherValues } = cabinToEdit;
+
   const {
     handleSubmit,
     reset,
@@ -82,11 +55,19 @@ function CreateCabinForm({ cabinToEdit = {} }) {
   if (isCreating) return <Spinner />;
 
   function onSubmit(data) {
-    mutate({
-      ...data,
-      image: isEmptyObj(data.image) ? image : data.image[0],
-      id: cabinToEditId,
-    });
+    const newImage = data.image;
+
+    if (isCreateSession)
+      mutate({
+        ...data,
+        image: newImage[0],
+      });
+    else
+      mutate({
+        ...data,
+        image: isEmptyObj(newImage) ? oldImage : newImage[0],
+        id: cabinToEditId,
+      });
   }
 
   return (
@@ -145,23 +126,22 @@ function CreateCabinForm({ cabinToEdit = {} }) {
         {errors.description && <Error>*This field is requiered</Error>}
       </FormRow>
 
-      <StyledFormRow label="Cabin photo">
-        <StyledLabel htmlFor="image">Cabin photo</StyledLabel>
+      <FormRow label="Cabin photo">
         <FileInput
           id="image"
           accept="image/*"
-          {...register("image", { required: action === "create" })}
+          {...register("image", { required: isCreateSession })}
         />
         {errors.image && <Error>*This field is requiered</Error>}
-      </StyledFormRow>
+      </FormRow>
 
-      <StyledFormRow>
+      <FormRow>
         {/* type is an HTML attribute! */}
         <Button variation="secondary" type="reset" disabled={isCreating}>
           Cancel
         </Button>
         <Button disabled={isCreating}>Edit cabin</Button>
-      </StyledFormRow>
+      </FormRow>
     </Form>
   );
 }
