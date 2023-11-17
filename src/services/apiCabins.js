@@ -30,7 +30,7 @@ async function createEditCabin({ id: cabinToEditId, image, ...otherValues }) {
       .insert([
         {
           ...otherValues,
-          image: imagePath,
+          image: isNewImage ? imagePath : image,
         },
       ])
       .select();

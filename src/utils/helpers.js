@@ -38,3 +38,11 @@ export function randomId() {
 export function isEmptyObj(object) {
   return JSON.stringify(object) === "{}";
 }
+
+export function removeKey(obj, keyToRemove) {
+  const newObj = { ...obj };
+
+  delete newObj[keyToRemove];
+
+  return newObj;
+}

@@ -5,6 +5,7 @@ import { formatCurrency } from "@/utils/helpers";
 
 import CreateCabinForm from "./CreateEditCabinForm";
 import { useDeleteCabin } from "./useDeleteCabin";
+import { useCreateCabin } from "./useCreateCabin";
 
 const TableRow = styled.div`
   display: grid;
@@ -50,6 +51,7 @@ function CabinRow({ cabin }) {
   const { id, name, maxCapacity, regularPrice, discount, image } = cabin;
 
   const { deleteCabin, isDeleting } = useDeleteCabin();
+  const { createCabin, isCreating } = useCreateCabin();
 
   return (
     <>
@@ -63,6 +65,9 @@ function CabinRow({ cabin }) {
           <button onClick={() => setShowEditForm((s) => !s)}>Edit</button>
           <button onClick={() => deleteCabin(id)} disabled={isDeleting}>
             Delete
+          </button>
+          <button onClick={() => createCabin(cabin)} disabled={isCreating}>
+            duplicate
           </button>
         </div>
       </TableRow>
