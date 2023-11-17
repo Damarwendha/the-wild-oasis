@@ -21,10 +21,11 @@ const Error = styled.span`
 `;
 
 function CreateCabinForm({ cabinToEdit = {} }) {
-  const { createCabin, isCreating } = useCreateCabin(reset);
-  const { editCabin, isEditing } = useEditCabin(reset);
+  // create session or edit session
+  const isCreateSession = isEmptyObj(cabinToEdit);
 
-  const isWorking = isCreating || isEditing;
+  // undefined when create session
+  const { id: cabinToEditId, image: oldImage, ...otherValues } = cabinToEdit;
 
   const {
     handleSubmit,
@@ -34,11 +35,10 @@ function CreateCabinForm({ cabinToEdit = {} }) {
     getValues,
   } = useForm({ defaultValues: { ...otherValues } });
 
-  // create session or edit session
-  const isCreateSession = isEmptyObj(cabinToEdit);
+  const { createCabin, isCreating } = useCreateCabin(reset);
+  const { editCabin, isEditing } = useEditCabin(reset);
 
-  // undefined when create session
-  const { id: cabinToEditId, image: oldImage, ...otherValues } = cabinToEdit;
+  const isWorking = isCreating || isEditing;
 
   if (isWorking) return <Spinner />;
 
