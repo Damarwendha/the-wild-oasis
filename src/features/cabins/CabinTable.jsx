@@ -1,8 +1,9 @@
-import { useQuery } from "@tanstack/react-query";
-import { getCabins } from "@/services/apiCabins";
 import styled from "styled-components";
+
 import Spinner from "@/ui/Spinner";
+
 import CabinRows from "./CabinRows";
+import { useCabins } from "./useCabins";
 
 const Table = styled.div`
   border: 1px solid var(--color-grey-200);
@@ -29,14 +30,7 @@ const TableHeader = styled.header`
 `;
 
 function CabinTable() {
-  const {
-    data: cabins,
-    isLoading,
-    error,
-  } = useQuery({
-    queryKey: ["cabins"],
-    queryFn: getCabins,
-  });
+  const { cabins, isLoading, error } = useCabins();
 
   if (isLoading) return <Spinner />;
   if (error) <span>Error: {error.message}</span>;
