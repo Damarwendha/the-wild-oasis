@@ -1,10 +1,7 @@
 /* eslint-disable react/prop-types */
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import styled from "styled-components";
-import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
 
-import { createEditCabin } from "@/services/apiCabins";
 import { isEmptyObj } from "@/utils/helpers";
 
 import Input from "@/ui/Input";
@@ -14,6 +11,9 @@ import FileInput from "@/ui/FileInput";
 import Textarea from "@/ui/Textarea";
 import Spinner from "@/ui/Spinner";
 import FormRow from "@/ui/FormRow";
+
+import { useCreateCabin } from "./useCreateCabin";
+import { useEditCabin } from "./useEditCabin";
 
 const Error = styled.span`
   font-size: 1.4rem;
@@ -35,35 +35,21 @@ function CreateCabinForm({ cabinToEdit = {} }) {
     getValues,
   } = useForm({ defaultValues: { ...otherValues } });
 
-  const queryClient = useQueryClient();
+  const { createCabin, isCreating } = useCreateCabin(reset);
+  const { editCabin, isEditing } = useEditCabin(reset);
 
-  const { mutate, isPending: isCreating } = useMutation({
-    mutationFn: (data) => createEditCabin(data),
-    mutationKey: "cabins",
-
-    onSuccess: () => {
-      toast.success("Cabin successfully added");
-      queryClient.invalidateQueries("cabins");
-      reset();
-    },
-
-    onError: () => {
-      toast.error((error) => error.message);
-    },
-  });
-
-  if (isCreating) return <Spinner />;
+  if (isCreating || isEditing) return <Spinner />;
 
   function onSubmit(data) {
     const newImage = data.image;
 
     if (isCreateSession)
-      mutate({
+      createCabin({
         ...data,
         image: newImage[0],
       });
     else
-      mutate({
+      editCabin({
         ...data,
         image: isEmptyObj(newImage) ? oldImage : newImage[0],
         id: cabinToEditId,
