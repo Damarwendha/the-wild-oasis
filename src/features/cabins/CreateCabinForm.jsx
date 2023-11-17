@@ -21,11 +21,10 @@ const Error = styled.span`
 `;
 
 function CreateCabinForm({ cabinToEdit = {} }) {
-  // create session or edit session
-  const isCreateSession = isEmptyObj(cabinToEdit);
+  const { createCabin, isCreating } = useCreateCabin(reset);
+  const { editCabin, isEditing } = useEditCabin(reset);
 
-  // undefined when create session
-  const { id: cabinToEditId, image: oldImage, ...otherValues } = cabinToEdit;
+  const isWorking = isCreating || isEditing;
 
   const {
     handleSubmit,
@@ -35,10 +34,13 @@ function CreateCabinForm({ cabinToEdit = {} }) {
     getValues,
   } = useForm({ defaultValues: { ...otherValues } });
 
-  const { createCabin, isCreating } = useCreateCabin(reset);
-  const { editCabin, isEditing } = useEditCabin(reset);
+  // create session or edit session
+  const isCreateSession = isEmptyObj(cabinToEdit);
 
-  if (isCreating || isEditing) return <Spinner />;
+  // undefined when create session
+  const { id: cabinToEditId, image: oldImage, ...otherValues } = cabinToEdit;
+
+  if (isWorking) return <Spinner />;
 
   function onSubmit(data) {
     const newImage = data.image;
@@ -123,10 +125,10 @@ function CreateCabinForm({ cabinToEdit = {} }) {
 
       <FormRow>
         {/* type is an HTML attribute! */}
-        <Button variation="secondary" type="reset" disabled={isCreating}>
+        <Button variation="secondary" type="reset" disabled={isWorking}>
           Cancel
         </Button>
-        <Button disabled={isCreating}>Edit cabin</Button>
+        <Button disabled={isWorking}>Edit cabin</Button>
       </FormRow>
     </Form>
   );
