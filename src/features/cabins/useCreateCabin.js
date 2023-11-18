@@ -7,7 +7,7 @@ import { removeKey } from "@/utils/helpers";
 function useCreateCabin(onSuccessFn) {
   const queryClient = useQueryClient();
 
-  const { mutate, isPending: isCreating } = useMutation({
+  const { mutate, isLoading: isCreating } = useMutation({
     mutationFn: (data) => createEditCabinApi(data),
     mutationKey: "cabins",
 
