@@ -34,7 +34,9 @@ const StyledLabel = styled.label`
 function FormRow({ label, children }) {
   return (
     <StyledFormRow>
-      <StyledLabel htmlFor={children[0].props.id}>{label}</StyledLabel>
+      <StyledLabel htmlFor={children[0]?.props.id || children?.props.id}>
+        {label}
+      </StyledLabel>
       {children}
     </StyledFormRow>
   );
