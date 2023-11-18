@@ -9,4 +9,7 @@ export default defineConfig({
       "@": "/src", // This is an example, use your actual project path
     },
   },
+  optimizeDeps: {
+    exclude: ["js-big-decimal"],
+  },
 });
