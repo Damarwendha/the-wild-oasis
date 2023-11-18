@@ -1,11 +1,14 @@
 import { useState } from "react";
 import styled from "styled-components";
 
+import { HiTrash } from "react-icons/hi2";
+
 import { formatCurrency } from "@/utils/helpers";
 
 import CreateCabinForm from "./CreateEditCabinForm";
 import { useDeleteCabin } from "./useDeleteCabin";
 import { useCreateCabin } from "./useCreateCabin";
+import { BiDuplicate, BiEdit } from "react-icons/bi";
 
 const TableRow = styled.div`
   display: grid;
@@ -62,12 +65,14 @@ function CabinRow({ cabin }) {
         <Price>{formatCurrency(regularPrice)}</Price>
         <Discount>{formatCurrency(discount)}</Discount>
         <div>
-          <button onClick={() => setShowEditForm((s) => !s)}>Edit</button>
+          <button onClick={() => setShowEditForm((s) => !s)}>
+            <BiEdit />
+          </button>
           <button onClick={() => deleteCabin(id)} disabled={isDeleting}>
-            Delete
+            <HiTrash />
           </button>
           <button onClick={() => createCabin(cabin)} disabled={isCreating}>
-            duplicate
+            <BiDuplicate />
           </button>
         </div>
       </TableRow>
