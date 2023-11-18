@@ -56,6 +56,10 @@ function CabinRow({ cabin }) {
   const { deleteCabin, isDeleting } = useDeleteCabin();
   const { createCabin, isCreating } = useCreateCabin();
 
+  function handleDuplicate() {
+    createCabin({ ...cabin, name: `${name} (copy)` });
+  }
+
   return (
     <>
       <TableRow role="row">
@@ -71,7 +75,7 @@ function CabinRow({ cabin }) {
           <button onClick={() => deleteCabin(id)} disabled={isDeleting}>
             <HiTrash />
           </button>
-          <button onClick={() => createCabin(cabin)} disabled={isCreating}>
+          <button onClick={handleDuplicate} disabled={isCreating}>
             <BiDuplicate />
           </button>
         </div>
