@@ -1,11 +1,14 @@
 import styled from "styled-components";
 import { HiTrash } from "react-icons/hi2";
-import { BiDuplicate } from "react-icons/bi";
+import { BiDuplicate, BiEdit } from "react-icons/bi";
 
 import { formatCurrency } from "@/utils/helpers";
+
+import Modal from "@/ui/Modal";
+import ConfirmDelete from "@/ui/ConfirmDelete";
 import { useDeleteCabin } from "./useDeleteCabin";
 import { useCreateCabin } from "./useCreateCabin";
-import EditCabin from "./EditCabin";
+import CreateCabinForm from "./CreateEditCabinForm";
 
 const TableRow = styled.div`
   display: grid;
@@ -65,10 +68,32 @@ function CabinRow({ cabin }) {
         <Price>{formatCurrency(regularPrice)}</Price>
         <Discount>{formatCurrency(discount)}</Discount>
         <div>
-          <EditCabin cabin={cabin} />
-          <button onClick={() => deleteCabin(id)} disabled={isDeleting}>
-            <HiTrash />
-          </button>
+          <Modal>
+            <Modal.ToOpen window="edit-cabin">
+              <button>
+                <BiEdit />
+              </button>
+            </Modal.ToOpen>
+            <Modal.Window name="edit-cabin">
+              <CreateCabinForm cabinToEdit={cabin} />
+            </Modal.Window>
+          </Modal>
+
+          <Modal>
+            <Modal.ToOpen window="delete-cabin">
+              <button>
+                <HiTrash />
+              </button>
+            </Modal.ToOpen>
+            <Modal.Window name="delete-cabin">
+              <ConfirmDelete
+                resourceName="cabin"
+                onConfirm={() => deleteCabin(id)}
+                disabled={isDeleting}
+              />
+            </Modal.Window>
+          </Modal>
+
           <button onClick={handleDuplicate} disabled={isCreating}>
             <BiDuplicate />
           </button>
