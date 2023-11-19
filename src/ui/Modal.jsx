@@ -1,4 +1,9 @@
-import { cloneElement, createContext, useContext, useState } from "react";
+import React, {
+  cloneElement,
+  createContext,
+  useContext,
+  useState,
+} from "react";
 import styled from "styled-components";
 import { HiXMark } from "react-icons/hi2";
 
@@ -78,6 +83,11 @@ function Window({ children, name: windowName }) {
   const { openWindowByName, close } = useContext(ModalContext);
 
   if (windowName !== openWindowByName) return;
+
+  if (React.Children.count(children) !== 1) {
+    console.error("Error: Only one child is allowed");
+    return <div style={{ color: "red" }}>Error: Only one child is allowed</div>;
+  }
 
   return (
     <Overlay>
