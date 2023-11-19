@@ -2,6 +2,8 @@ import React, {
   cloneElement,
   createContext,
   useContext,
+  useEffect,
+  useRef,
   useState,
 } from "react";
 import styled from "styled-components";
@@ -82,6 +84,21 @@ function ToOpen({ children, window }) {
 function Window({ children, name: windowName }) {
   const { openWindowByName, close } = useContext(ModalContext);
 
+  const ref = useRef();
+
+  useEffect(
+    function () {
+      const handleClick = (e) => {
+        if (!ref?.current?.contains(e.target)) close();
+      };
+
+      document.addEventListener("click", handleClick);
+
+      return () => document.removeEventListener("click", handleClick);
+    },
+    [close]
+  );
+
   if (windowName !== openWindowByName) return;
 
   if (React.Children.count(children) !== 1) {
@@ -91,7 +108,7 @@ function Window({ children, name: windowName }) {
 
   return (
     <Overlay>
-      <StyledModal>
+      <StyledModal ref={ref}>
         <Button onClick={close}>
           <HiXMark />
         </Button>
