@@ -69,23 +69,23 @@ function CabinRow({ cabin }) {
         <Discount>{formatCurrency(discount)}</Discount>
         <div>
           <Modal>
-            <Modal.ToOpen window="edit-cabin">
+            <Modal.ToOpen>
               <button>
                 <BiEdit />
               </button>
             </Modal.ToOpen>
-            <Modal.Window name="edit-cabin">
+            <Modal.Window>
               <CreateCabinForm cabinToEdit={cabin} />
             </Modal.Window>
           </Modal>
 
           <Modal>
-            <Modal.ToOpen window="delete-cabin">
+            <Modal.ToOpen>
               <button>
                 <HiTrash />
               </button>
             </Modal.ToOpen>
-            <Modal.Window name="delete-cabin">
+            <Modal.Window>
               <ConfirmDelete
                 resourceName="cabin"
                 onConfirm={() => deleteCabin(id)}

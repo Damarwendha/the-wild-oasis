@@ -5,10 +5,10 @@ import CreateEditCabinForm from "./CreateEditCabinForm";
 function AddCabin() {
   return (
     <Modal>
-      <Modal.ToOpen window="cabin-form">
+      <Modal.ToOpen>
         <Button>Add new cabin</Button>
       </Modal.ToOpen>
-      <Modal.Window name="cabin-form">
+      <Modal.Window>
         <CreateEditCabinForm />
       </Modal.Window>
     </Modal>

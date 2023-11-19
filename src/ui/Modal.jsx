@@ -1,9 +1,4 @@
-import React, {
-  cloneElement,
-  createContext,
-  useContext,
-  useState,
-} from "react";
+import { cloneElement, createContext, useContext, useState } from "react";
 import styled from "styled-components";
 import { HiXMark } from "react-icons/hi2";
 import { useOutsideClickListener } from "@/hooks/useOutsideClickListener";
@@ -60,13 +55,13 @@ const Button = styled.button`
 const ModalContext = createContext();
 
 function Modal({ children }) {
-  const [openWindowByName, setOpenWindowByName] = useState("");
+  const [showWindow, setShowWindow] = useState(false);
 
-  const close = () => setOpenWindowByName("");
-  const open = (windowName) => setOpenWindowByName(windowName);
+  const close = () => setShowWindow(false);
+  const open = () => setShowWindow(true);
 
   return (
-    <ModalContext.Provider value={{ open, close, openWindowByName }}>
+    <ModalContext.Provider value={{ open, close, showWindow }}>
       {children}
     </ModalContext.Provider>
   );
@@ -80,17 +75,13 @@ function ToOpen({ children, window }) {
   });
 }
 
-function Window({ children, name: windowName }) {
-  const { openWindowByName, close } = useContext(ModalContext);
+// expect only one children element
+function Window({ children }) {
+  const { close, showWindow } = useContext(ModalContext);
 
   const { insideRef } = useOutsideClickListener(close);
 
-  if (windowName !== openWindowByName) return;
-
-  if (React.Children.count(children) !== 1) {
-    console.error("Error: Only one child is allowed");
-    return <div style={{ color: "red" }}>Error: Only one child is allowed</div>;
-  }
+  if (!showWindow) return;
 
   return (
     <Overlay>
