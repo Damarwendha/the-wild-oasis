@@ -1,14 +1,11 @@
-import { useState } from "react";
 import styled from "styled-components";
-
 import { HiTrash } from "react-icons/hi2";
+import { BiDuplicate } from "react-icons/bi";
 
 import { formatCurrency } from "@/utils/helpers";
-
-import CreateCabinForm from "./CreateEditCabinForm";
 import { useDeleteCabin } from "./useDeleteCabin";
 import { useCreateCabin } from "./useCreateCabin";
-import { BiDuplicate, BiEdit } from "react-icons/bi";
+import EditCabin from "./EditCabin";
 
 const TableRow = styled.div`
   display: grid;
@@ -50,7 +47,6 @@ const Discount = styled.div`
 `;
 
 function CabinRow({ cabin }) {
-  const [showEditForm, setShowEditForm] = useState();
   const { id, name, maxCapacity, regularPrice, discount, image } = cabin;
 
   const { deleteCabin, isDeleting } = useDeleteCabin();
@@ -69,9 +65,7 @@ function CabinRow({ cabin }) {
         <Price>{formatCurrency(regularPrice)}</Price>
         <Discount>{formatCurrency(discount)}</Discount>
         <div>
-          <button onClick={() => setShowEditForm((s) => !s)}>
-            <BiEdit />
-          </button>
+          <EditCabin cabin={cabin} />
           <button onClick={() => deleteCabin(id)} disabled={isDeleting}>
             <HiTrash />
           </button>
@@ -80,7 +74,6 @@ function CabinRow({ cabin }) {
           </button>
         </div>
       </TableRow>
-      {showEditForm && <CreateCabinForm cabinToEdit={cabin} />}
     </>
   );
 }
