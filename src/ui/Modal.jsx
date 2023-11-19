@@ -2,12 +2,11 @@ import React, {
   cloneElement,
   createContext,
   useContext,
-  useEffect,
-  useRef,
   useState,
 } from "react";
 import styled from "styled-components";
 import { HiXMark } from "react-icons/hi2";
+import { useOutsideClickListener } from "@/hooks/useOutsideClickListener";
 
 const StyledModal = styled.div`
   position: fixed;
@@ -84,20 +83,7 @@ function ToOpen({ children, window }) {
 function Window({ children, name: windowName }) {
   const { openWindowByName, close } = useContext(ModalContext);
 
-  const ref = useRef();
-
-  useEffect(
-    function () {
-      const handleClick = (e) => {
-        if (!ref?.current?.contains(e.target)) close();
-      };
-
-      document.addEventListener("click", handleClick);
-
-      return () => document.removeEventListener("click", handleClick);
-    },
-    [close]
-  );
+  const { insideRef } = useOutsideClickListener(close);
 
   if (windowName !== openWindowByName) return;
 
@@ -108,7 +94,7 @@ function Window({ children, name: windowName }) {
 
   return (
     <Overlay>
-      <StyledModal ref={ref}>
+      <StyledModal ref={insideRef}>
         <Button onClick={close}>
           <HiXMark />
         </Button>
