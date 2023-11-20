@@ -7,6 +7,7 @@ const StyledHeader = styled.header`
   left: 0;
   width: 100%;
   height: var(--header-height);
+  z-index: 100;
 `;
 
 function Header() {

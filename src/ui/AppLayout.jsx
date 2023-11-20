@@ -8,10 +8,10 @@ const StyledAppLayout = styled.div`
 `;
 
 const Main = styled.main`
+  padding-bottom: 10vh;
   background-color: var(--color-grey-100);
   flex: 1;
-  height: 100vh;
-  overflow: scroll;
+  height: 100%;
 `;
 
 const Container = styled.div`
