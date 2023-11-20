@@ -1,4 +1,6 @@
+import { useKey } from "rooks";
 import styled from "styled-components";
+
 import Button from "./Button";
 import Heading from "./Heading";
 
@@ -30,10 +32,20 @@ function ConfirmDelete({ resourceName, onConfirm, disabled, closeModal }) {
       </p>
 
       <div>
-        <Button variation="secondary" disabled={disabled} onClick={closeModal}>
+        <Button
+          variation="secondary"
+          disabled={disabled}
+          onClick={closeModal}
+          onKeyDown={useKey("Backspace", closeModal)}
+        >
           Cancel
         </Button>
-        <Button variation="danger" disabled={disabled} onClick={onConfirm}>
+        <Button
+          variation="danger"
+          disabled={disabled}
+          onClick={onConfirm}
+          onKeyDown={useKey(["Enter", "Delete"], onConfirm)}
+        >
           Delete
         </Button>
       </div>
