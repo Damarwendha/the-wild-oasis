@@ -6,7 +6,10 @@ function useOutsideClickListener(action = () => {}, listenCapturing = true) {
   useEffect(
     function () {
       const handleClick = (e) => {
-        if (!insideRef?.current?.contains(e.target)) action?.();
+        if (insideRef.current && !insideRef.current.contains(e.target)) {
+          action();
+          console.log("close");
+        }
       };
 
       document.addEventListener("click", handleClick, listenCapturing);

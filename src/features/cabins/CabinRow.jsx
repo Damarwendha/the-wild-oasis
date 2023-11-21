@@ -1,14 +1,15 @@
 import styled from "styled-components";
-import { HiTrash } from "react-icons/hi2";
-import { BiDuplicate, BiEdit } from "react-icons/bi";
 
 import { formatCurrency } from "@/utils/helpers";
 import { useDeleteCabin } from "./useDeleteCabin";
 import { useCreateCabin } from "./useCreateCabin";
 
+import { HiTrash } from "react-icons/hi2";
+import { BiDuplicate, BiEdit } from "react-icons/bi";
 import Modal from "@/ui/Modal";
 import Table from "@/ui/Table";
 import ConfirmDelete from "@/ui/ConfirmDelete";
+import Menus from "@/ui/Menus";
 import CreateCabinForm from "./CreateEditCabinForm";
 
 const Img = styled.img`
@@ -49,46 +50,53 @@ function CabinRow({ cabin }) {
   }
 
   return (
-    <>
-      <Table.Row>
-        <Img src={image} alt="Cabin" />
-        <Cabin>{name}</Cabin>
-        <div>Fits up to {maxCapacity}</div>
-        <Price>{formatCurrency(regularPrice)}</Price>
-        <Discount>{formatCurrency(discount)}</Discount>
-        <div>
-          <Modal>
-            <Modal.ToOpen>
-              <button>
-                <BiEdit />
-              </button>
-            </Modal.ToOpen>
-            <Modal.Window>
-              <CreateCabinForm cabinToEdit={cabin} />
-            </Modal.Window>
-          </Modal>
+    <Table.Row>
+      <Img src={image} alt="Cabin" />
+      <Cabin>{name}</Cabin>
+      <div>Fits up to {maxCapacity}</div>
+      <Price>{formatCurrency(regularPrice)}</Price>
+      <Discount>{formatCurrency(discount)}</Discount>
+      <Modal>
+        <Menus>
+          <Menus.Menu>
+            <Menus.Toggle id="menu-cabin" />
 
-          <Modal>
-            <Modal.ToOpen>
-              <button>
-                <HiTrash />
-              </button>
-            </Modal.ToOpen>
-            <Modal.Window>
-              <ConfirmDelete
-                resourceName="cabin"
-                onConfirm={() => deleteCabin(id)}
-                disabled={isDeleting}
-              />
-            </Modal.Window>
-          </Modal>
+            <Menus.List id="menu-cabin">
+              <Menus.Button onClick={handleDuplicate} disabled={isCreating}>
+                <BiDuplicate color="blue" opacity="60%" />
+                <span>Duplicate</span>
+              </Menus.Button>
 
-          <button onClick={handleDuplicate} disabled={isCreating}>
-            <BiDuplicate />
-          </button>
-        </div>
-      </Table.Row>
-    </>
+              <Modal.ToOpen id="cabin-edit">
+                <Menus.Button>
+                  <BiEdit color="orange" opacity="60%" />
+                  <span>Edit</span>
+                </Menus.Button>
+              </Modal.ToOpen>
+
+              <Modal.ToOpen id="cabin-delete">
+                <Menus.Button>
+                  <HiTrash color="red" opacity="60%" />
+                  <span>Delete</span>
+                </Menus.Button>
+              </Modal.ToOpen>
+            </Menus.List>
+          </Menus.Menu>
+
+          <Modal.Window id="cabin-edit">
+            <CreateCabinForm cabinToEdit={cabin} />
+          </Modal.Window>
+
+          <Modal.Window id="cabin-delete">
+            <ConfirmDelete
+              resourceName="cabin"
+              onConfirm={() => deleteCabin(id)}
+              disabled={isDeleting}
+            />
+          </Modal.Window>
+        </Menus>
+      </Modal>
+    </Table.Row>
   );
 }
 

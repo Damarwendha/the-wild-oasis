@@ -1,7 +1,10 @@
 import { cloneElement, createContext, useContext, useState } from "react";
 import styled from "styled-components";
-import { HiXMark } from "react-icons/hi2";
+import { createPortal } from "react-dom";
+
 import { useOutsideClickListener } from "@/hooks/useOutsideClickListener";
+
+import { HiXMark } from "react-icons/hi2";
 
 const StyledModal = styled.div`
   position: fixed;
@@ -55,35 +58,35 @@ const Button = styled.button`
 const ModalContext = createContext();
 
 function Modal({ children }) {
-  const [showWindow, setShowWindow] = useState(false);
+  const [openId, setOpenId] = useState("");
 
-  const close = () => setShowWindow(false);
-  const open = () => setShowWindow(true);
+  const close = () => setOpenId("");
+  const open = (id) => setOpenId(id);
 
   return (
-    <ModalContext.Provider value={{ open, close, showWindow }}>
+    <ModalContext.Provider value={{ open, close, openId }}>
       {children}
     </ModalContext.Provider>
   );
 }
 
-function ToOpen({ children, window }) {
+function ToOpen({ children, id }) {
   const { open } = useContext(ModalContext);
 
   return cloneElement(children, {
-    onClick: () => open(window),
+    onClick: () => open(id),
   });
 }
 
 // expect only one children element
-function Window({ children }) {
-  const { close, showWindow } = useContext(ModalContext);
+function Window({ children, id }) {
+  const { close, openId } = useContext(ModalContext);
 
   const { insideRef } = useOutsideClickListener(close);
 
-  if (!showWindow) return;
+  if (openId !== id) return;
 
-  return (
+  return createPortal(
     <Overlay>
       <StyledModal ref={insideRef}>
         <Button onClick={close}>
@@ -91,7 +94,8 @@ function Window({ children }) {
         </Button>
         <div>{cloneElement(children, { closeModal: close })}</div>
       </StyledModal>
-    </Overlay>
+    </Overlay>,
+    document.body
   );
 }
 
