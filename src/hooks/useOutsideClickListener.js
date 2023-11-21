@@ -8,7 +8,6 @@ function useOutsideClickListener(action = () => {}, listenCapturing = true) {
       const handleClick = (e) => {
         if (insideRef.current && !insideRef.current.contains(e.target)) {
           action();
-          console.log("close");
         }
       };
 

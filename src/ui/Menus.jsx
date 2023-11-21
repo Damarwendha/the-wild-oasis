@@ -1,4 +1,10 @@
-import { createContext, useCallback, useContext, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { createPortal } from "react-dom";
 import styled from "styled-components";
 
@@ -93,14 +99,28 @@ function Menus({ children }) {
 
 function Toggle({ id }) {
   const { openId, open, close, setClickPosition } = useContext(MenusContext);
+
   function handleToggle(e) {
     const isIdDiff = id !== openId || openId === "";
 
     if (isIdDiff) {
-      setClickPosition({ x: e.pageX, y: e.pageY });
+      setClickPosition({ x: e.nativeEvent.x, y: e.nativeEvent.y });
       open(id);
     } else close();
   }
+
+  useEffect(
+    function () {
+      const onScroll = () => {
+        close();
+      };
+
+      window.addEventListener("scroll", onScroll);
+
+      return () => window.removeEventListener("scroll", onScroll);
+    },
+    [close]
+  );
 
   return (
     <StyledToggle onClick={handleToggle}>
@@ -115,9 +135,8 @@ function List({ id, children }) {
   const { insideRef } = useOutsideClickListener(close, true);
 
   if (openId !== id) return;
-
   return createPortal(
-    <StyledList position={clickPosition} ref={insideRef}>
+    <StyledList position={clickPosition} ref={insideRef} onClick={close}>
       {children}
     </StyledList>,
     document.body
