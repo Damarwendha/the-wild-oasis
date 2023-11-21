@@ -1,4 +1,4 @@
-import { useKey } from "rooks";
+import { useKey } from "@/hooks/useKey";
 import styled from "styled-components";
 
 import Button from "./Button";
