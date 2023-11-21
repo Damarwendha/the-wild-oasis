@@ -64,9 +64,9 @@ function CreateCabinForm({ cabinToEdit = {}, closeModal }) {
           type="text"
           id="name"
           disabled={isWorking}
-          {...register("name", { required: true })}
+          {...register("name", { required: "*This field is required" })}
         />
-        {errors.name && <Error>*This field is requiered</Error>}
+        {errors.name && <Error>{errors?.name?.message}</Error>}
       </FormRow>
 
       <FormRow label="Maximum capacity">
@@ -74,10 +74,10 @@ function CreateCabinForm({ cabinToEdit = {}, closeModal }) {
           type="number"
           id="maxCapacity"
           disabled={isWorking}
-          {...register("maxCapacity", { required: true })}
+          {...register("maxCapacity", { required: "*This field is required" })}
         />
 
-        {errors.maxCapacity && <Error>*This field is requiered</Error>}
+        {errors.maxCapacity && <Error>{errors?.maxCapacity?.message}</Error>}
       </FormRow>
 
       <FormRow label="Regular price">
@@ -85,10 +85,10 @@ function CreateCabinForm({ cabinToEdit = {}, closeModal }) {
           type="number"
           id="regularPrice"
           disabled={isWorking}
-          {...register("regularPrice", { required: true })}
+          {...register("regularPrice", { required: "*This field is required" })}
         />
 
-        {errors.regularPrice && <Error>*This field is requiered</Error>}
+        {errors.regularPrice && <Error>{errors?.regularPrice?.message}</Error>}
       </FormRow>
 
       <FormRow label="Discount">
@@ -99,12 +99,12 @@ function CreateCabinForm({ cabinToEdit = {}, closeModal }) {
           disabled={isWorking}
           {...register("discount", {
             validate: (value) =>
-              Number(value) < Number(getValues().regularPrice),
+              Number(value) < Number(getValues().regularPrice) ||
+              "*Discount value should be less than regular price",
+            required: "*This field is required",
           })}
         />
-        {errors.discount && (
-          <Error>*Discount value should be less than regular price</Error>
-        )}
+        {errors?.discount && <Error>{errors?.discount?.message}</Error>}
       </FormRow>
 
       <FormRow label="Description for website">
@@ -113,9 +113,9 @@ function CreateCabinForm({ cabinToEdit = {}, closeModal }) {
           id="description"
           defaultValue=""
           disabled={isWorking}
-          {...register("description", { required: true })}
+          {...register("description", { required: "*This field is required" })}
         />
-        {errors.description && <Error>*This field is requiered</Error>}
+        {errors.description && <Error>{errors?.description?.message}</Error>}
       </FormRow>
 
       <FormRow label="Cabin photo">
@@ -123,9 +123,11 @@ function CreateCabinForm({ cabinToEdit = {}, closeModal }) {
           id="image"
           accept="image/*"
           disabled={isWorking}
-          {...register("image", { required: isCreateSession })}
+          {...register("image", {
+            required: isCreateSession && "*This field is required",
+          })}
         />
-        {errors.image && <Error>*This field is requiered</Error>}
+        {errors.image && <Error>{errors?.image?.message}</Error>}
       </FormRow>
 
       <FormRow>
