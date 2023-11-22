@@ -1,6 +1,6 @@
 # Preview
-<img src='https://im3.ezgif.com/tmp/ezgif-3-ee80eae989.png' />
-<img src='https://im3.ezgif.com/tmp/ezgif-3-c8061d3aed.png' />
+<img src='https://i.postimg.cc/sXLn3TFM/Screenshot-254.png' />
+<img src='https://i.postimg.cc/zGf0RmJy/Screenshot-253.png' />
 
 # React + Vite
 
